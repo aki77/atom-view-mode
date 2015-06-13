@@ -1,0 +1,25 @@
+{
+  "name": "view-mode",
+  "main": "./lib/main",
+  "version": "0.0.0",
+  "description": "read only mode",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "view-mode:toggle"
+  },
+  "repository": "https://github.com/aki77/atom-view-mode",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  }
+}

@@ -33,6 +33,10 @@ Inspired by [view.el](http://emacswiki.org/emacs/ViewMode)
   'g': 'core:move-to-top'
   'shift-g': 'core:move-to-bottom'
   'f': 'core:page-down'
+
+# tree-view
+'.tree-view':
+  'v': 'view-mode:selected-entry'
 ```
 
 ## TODO

@@ -8,7 +8,17 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-text-editor:not(mini)',
-      'view-mode:toggle': (event) => @toggle(event)
+      'view-mode:toggle': ({target}) =>
+        editor = target?.getModel?()
+        @toggle(editor) if editor
+    @subscriptions.add atom.commands.add '.tree-view',
+      'view-mode:selected-entry': ({currentTarget: target}) =>
+        entry =  target?.querySelector('.selected .name')
+        filePath = entry?.dataset.path
+        return unless filePath
+        editor = atom.workspace.open(filePath).then((editor) => 
+          @toggle(editor)
+        )
 
     @viewEditorsSubscriptions = new WeakMap()
     @statusBarView = new StatusBarView(@viewEditorsSubscriptions)
@@ -20,12 +30,10 @@ module.exports =
     @statusBarView?.detach()
     @statusBarView = null
 
-  toggle: (event) ->
-    editorView = event.target
-    editor = editorView?.getModel?()
-    return unless editor
-
+  toggle: (editor) ->
+    editorView = atom.views.getView(editor)
     subscription = @viewEditorsSubscriptions.get(editor)
+
     if subscription
       subscription.dispose()
       @subscriptions.remove(subscription)

@@ -1,6 +1,7 @@
 # view-mode package
 
 Read only mode.
+[![Build Status](https://travis-ci.org/aki77/atom-view-mode.svg)](https://travis-ci.org/aki77/atom-view-mode)
 
 [![Gyazo](http://i.gyazo.com/96813055d83507973f70dde16944ba12.gif)](http://gyazo.com/96813055d83507973f70dde16944ba12)
 

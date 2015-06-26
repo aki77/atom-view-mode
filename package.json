@@ -1,14 +1,18 @@
 {
   "name": "view-mode",
   "main": "./lib/main",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "read only mode",
   "keywords": [
     "emacs"
   ],
   "activationCommands": {
-    "atom-workspace": ["view-mode:toggle"],
-    ".tree-view": ["view-mode:selected-entry"]
+    "atom-workspace": [
+      "view-mode:toggle"
+    ],
+    ".tree-view": [
+      "view-mode:selected-entry"
+    ]
   },
   "repository": "https://github.com/aki77/atom-view-mode",
   "license": "MIT",

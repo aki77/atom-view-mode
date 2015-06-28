@@ -4,9 +4,20 @@ StatusBarView = require './status-bar-view'
 module.exports =
   subscriptions: null
   viewEditors: null
+  openRegex: null
+
+  config:
+    openPatterns:
+      description: 'Regex of file name to open by `view-mode`.'
+      default: ''
+      type: 'string'
 
   activate: (state) ->
+    @viewEditorsSubscriptions = new WeakMap()
+    @statusBarView = new StatusBarView(@viewEditorsSubscriptions)
+
     @subscriptions = new CompositeDisposable
+
     @subscriptions.add atom.commands.add 'atom-text-editor:not(mini)',
       'view-mode:toggle': ({target}) =>
         editor = target?.getModel?()
@@ -16,12 +27,21 @@ module.exports =
         entry =  target?.querySelector('.selected .name')
         filePath = entry?.dataset.path
         return unless filePath
-        editor = atom.workspace.open(filePath).then((editor) => 
+        editor = atom.workspace.open(filePath).then((editor) =>
           @toggle(editor)
         )
 
-    @viewEditorsSubscriptions = new WeakMap()
-    @statusBarView = new StatusBarView(@viewEditorsSubscriptions)
+    @subscriptions.add(atom.config.observe('view-mode.openPatterns', (pattern) =>
+      if pattern.length > 0
+        @openRegex = new RegExp(pattern, 'i')
+      else
+        @openRegex = null
+    ))
+
+    @subscriptions.add(atom.workspace.observeTextEditors((editor) =>
+      if editor.getPath()?.match(@openRegex)
+        @toggle(editor)
+    ))
 
   deactivate: ->
     @subscriptions?.dispose()
@@ -78,3 +98,4 @@ module.exports =
 
   consumeStatusBar: (statusBar) ->
     @statusBarView.initialize(statusBar)
+    @statusBarView.update()

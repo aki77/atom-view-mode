@@ -1,3 +1,6 @@
+## 0.1.2
+* Add openPatterns settings
+
 ## 0.1.1
 * Support tree-view
 

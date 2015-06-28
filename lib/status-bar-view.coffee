@@ -28,7 +28,7 @@ class StatusBarView
 
   attach: ->
     unless @tile
-      @tile = @statusBar.addRightTile(item: @container, priority: 20)
+      @tile = @statusBar?.addRightTile(item: @container, priority: 20)
 
   detach: ->
     @tile?.destroy()

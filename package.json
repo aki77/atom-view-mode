@@ -6,14 +6,6 @@
   "keywords": [
     "emacs"
   ],
-  "activationCommands": {
-    "atom-workspace": [
-      "view-mode:toggle"
-    ],
-    ".tree-view": [
-      "view-mode:selected-entry"
-    ]
-  },
   "repository": "https://github.com/aki77/atom-view-mode",
   "license": "MIT",
   "engines": {

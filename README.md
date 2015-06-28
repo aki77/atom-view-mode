@@ -7,6 +7,12 @@ Read only mode.
 
 Inspired by [view.el](http://emacswiki.org/emacs/ViewMode)
 
+## Settings
+
+* `openPatterns` (default: '')
+
+[![Gyazo](http://i.gyazo.com/c919123b57fbebb2e2cc189f94780e37.png)](http://gyazo.com/c919123b57fbebb2e2cc189f94780e37)
+
 ## Keymap
 
 **default**

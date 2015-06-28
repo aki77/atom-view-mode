@@ -8,10 +8,13 @@ describe "ViewMode", ->
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('view-mode')
+    atom.config.set('view-mode.openPatterns', '')
 
     waitsForPromise ->
       atom.packages.activatePackage('status-bar')
+
+    waitsForPromise ->
+      atom.packages.activatePackage('view-mode')
 
     waitsForPromise ->
       atom.workspace.open().then (_editor) ->
@@ -24,14 +27,10 @@ describe "ViewMode", ->
       expect(editorElement.component.isInputEnabled()).toBe(true)
       atom.commands.dispatch(editorElement, 'view-mode:toggle')
 
-      waitsForPromise ->
-        activationPromise
+      expect(editorElement.component.isInputEnabled()).toBe(false)
 
-      runs ->
-        expect(editorElement.component.isInputEnabled()).toBe(false)
-
-        atom.commands.dispatch(editorElement, 'view-mode:toggle')
-        expect(editorElement.component.isInputEnabled()).toBe(true)
+      atom.commands.dispatch(editorElement, 'view-mode:toggle')
+      expect(editorElement.component.isInputEnabled()).toBe(true)
 
     it "disables undo() & redo()", ->
       editor.setText('abc')
@@ -41,21 +40,17 @@ describe "ViewMode", ->
 
       atom.commands.dispatch(editorElement, 'view-mode:toggle')
 
-      waitsForPromise ->
-        activationPromise
+      editor.undo()
+      expect(editor.getText()).toBe('abc')
+      editor.redo()
+      expect(editor.getText()).toBe('abc')
 
-      runs ->
-        editor.undo()
-        expect(editor.getText()).toBe('abc')
-        editor.redo()
-        expect(editor.getText()).toBe('abc')
-
-        atom.commands.dispatch(editorElement, 'view-mode:toggle')
-        editor.setText('def')
-        editor.undo()
-        expect(editor.getText()).toBe('abc')
-        editor.redo()
-        expect(editor.getText()).toBe('def')
+      atom.commands.dispatch(editorElement, 'view-mode:toggle')
+      editor.setText('def')
+      editor.undo()
+      expect(editor.getText()).toBe('abc')
+      editor.redo()
+      expect(editor.getText()).toBe('def')
 
     it "disables pasteText()", ->
       editor.selectAll()
@@ -65,13 +60,21 @@ describe "ViewMode", ->
 
       atom.commands.dispatch(editorElement, 'view-mode:toggle')
 
+      editor.pasteText()
+      expect(editor.getText()).toBe('abc')
+
+      atom.commands.dispatch(editorElement, 'view-mode:toggle')
+      editor.pasteText()
+      expect(editor.getText()).toBe('abc123')
+
+  describe "settings", ->
+    it 'openPatterns',  ->
+      atom.config.set('view-mode.openPatterns', 'view-only-file')
+
       waitsForPromise ->
-        activationPromise
+        atom.workspace.open('test-view-only-file.txt').then((_editor) ->
+          editorElement = atom.views.getView(_editor)
+        )
 
       runs ->
-        editor.pasteText()
-        expect(editor.getText()).toBe('abc')
-
-        atom.commands.dispatch(editorElement, 'view-mode:toggle')
-        editor.pasteText()
-        expect(editor.getText()).toBe('abc123')
+        expect(editorElement.component.isInputEnabled()).toBe(false)
